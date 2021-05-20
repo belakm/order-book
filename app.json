@@ -1,0 +1,12 @@
+{
+  "name": "order-book",
+  "displayName": "order-book",
+  "expo": {
+    "name": "order-book",
+    "slug": "order-book",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
