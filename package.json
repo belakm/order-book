@@ -8,7 +8,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@types/react-redux": "^7.1.16",
+    "d3-scale": "^3.3.0",
     "expo": "~41.0.1",
     "expo-splash-screen": "~0.10.2",
     "expo-updates": "~0.5.4",
@@ -19,6 +19,8 @@
     "react-native-gesture-handler": "~1.10.2",
     "react-native-reanimated": "~2.1.0",
     "react-native-screens": "~3.0.0",
+    "react-native-svg": "12.1.0",
+    "react-native-svg-charts": "^5.4.0",
     "react-native-unimodules": "~0.13.3",
     "react-native-web": "~0.13.12",
     "react-redux": "^7.2.4",
@@ -29,12 +31,22 @@
     "@types/luxon": "^1.26.5",
     "@types/react": "~16.9.35",
     "@types/react-native": "~0.63.2",
+    "@types/react-native-svg-charts": "^5.0.7",
+    "@types/react-redux": "^7.1.16",
+    "@typescript-eslint/eslint-plugin": "^4.24.0",
+    "@typescript-eslint/parser": "^4.24.0",
     "babel-preset-expo": "~8.3.0",
+    "eslint": "^7.27.0",
+    "eslint-config-universe": "^7.0.1",
     "jest-expo": "~41.0.0",
+    "prettier": "^2.3.0",
     "typescript": "~4.0.0"
   },
   "jest": {
     "preset": "react-native"
+  },
+  "eslintConfig": {
+    "extends": "universe/native"
   },
   "private": true
 }

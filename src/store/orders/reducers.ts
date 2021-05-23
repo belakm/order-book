@@ -1,4 +1,5 @@
-import { combineReducers, Reducer } from 'redux'
+import { Reducer } from 'redux'
+
 import { Action } from './actions'
 
 const snapshotLimit = 100
@@ -6,6 +7,7 @@ const snapshotLimit = 100
 export interface Order {
   volume: number
   price: number
+  sum: number
 }
 
 export interface Orders {
@@ -26,43 +28,47 @@ export interface OrderBook {
 export type OrderBookType = 'btcusd' | 'btceur'
 
 export type OrderBookState = {
-  [ key in OrderBookType ]: OrderBook
+  [key in OrderBookType]: OrderBook
 }
 
-const emptyBook : OrderBook = {
+const emptyBook: OrderBook = {
   isFetching: false,
-  snapshots: []
+  snapshots: [],
 }
 
-const initialState : OrderBookState = {
+const initialState: OrderBookState = {
   btceur: { ...emptyBook },
-  btcusd: { ...emptyBook }
+  btcusd: { ...emptyBook },
 }
 
-const ordersReducer : Reducer<OrderBookState, Action> = (state: OrderBookState = { ...initialState }, action: Action) : OrderBookState => {
+const ordersReducer: Reducer<OrderBookState, Action> = (
+  state: OrderBookState = { ...initialState },
+  action: Action
+): OrderBookState => {
   const { orderBookType } = action
   switch (action.type) {
-  case 'ADD_ORDER_BOOK_SNAPSHOT':
-    const { snapshot } = action
-    return { 
-      ...state, 
-      [orderBookType]: {
-        ...state[orderBookType],
-        snapshots: [snapshot, ...state[orderBookType].snapshots].slice(0, snapshotLimit - 2)
+    case 'ADD_ORDER_BOOK_SNAPSHOT':
+      return {
+        ...state,
+        [orderBookType]: {
+          ...state[orderBookType],
+          snapshots: [action.snapshot, ...state[orderBookType].snapshots].slice(
+            0,
+            snapshotLimit - 2
+          ),
+        },
       }
-    }
-  case 'SET_ORDER_BOOK_FETCHING':
-    const {isFetching} = action
-    return { 
-      ...state,
-      [orderBookType]: {
-        ...state[orderBookType],
-        isFetching
+    case 'SET_ORDER_BOOK_FETCHING':
+      return {
+        ...state,
+        [orderBookType]: {
+          ...state[orderBookType],
+          isFetching: action.isFetching,
+        },
       }
-    }
-  // on init
-  default: 
-    return state
+    // on init
+    default:
+      return state
   }
 }
 
