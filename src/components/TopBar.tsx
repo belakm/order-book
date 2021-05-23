@@ -1,8 +1,8 @@
 import React, { FunctionComponent } from 'react'
 import { Image, View } from 'react-native'
 
-import logo from '../../img/logo.svg'
-import styles from '../../style'
+import logo from '../img/logo.svg'
+import styles from '../style'
 
 const TopBar: FunctionComponent = () => {
   return (

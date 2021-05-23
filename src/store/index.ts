@@ -1,15 +1,15 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 
-import orders, { OrderBookState } from './orders/reducers'
+import orderBook, { OrderBookState } from './orders/reducers'
 
 export interface RootState {
-  orders: OrderBookState
+  orderBook: OrderBookState
 }
 
 export default createStore(
   combineReducers<RootState>({
-    orders,
+    orderBook,
   }),
   applyMiddleware(thunk)
 )

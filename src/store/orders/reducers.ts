@@ -20,51 +20,52 @@ export interface BookSnapshot {
   orders: Orders
 }
 
-export interface OrderBook {
-  isFetching: boolean
-  snapshots: BookSnapshot[]
-}
-
-export type OrderBookType = 'btcusd' | 'btceur'
+export type OrderBookPair = 'btcusd' | 'btceur'
 
 export type OrderBookState = {
-  [key in OrderBookType]: OrderBook
-}
-
-const emptyBook: OrderBook = {
-  isFetching: false,
-  snapshots: [],
+  isListening: boolean
+  snapshotIndex: number
+  chosenPair: OrderBookPair
+  pairs: {
+    [key in OrderBookPair]: BookSnapshot[]
+  }
 }
 
 const initialState: OrderBookState = {
-  btceur: { ...emptyBook },
-  btcusd: { ...emptyBook },
+  isListening: true,
+  snapshotIndex: 0,
+  chosenPair: 'btceur',
+  pairs: {
+    btceur: [],
+    btcusd: [],
+  },
 }
 
-const ordersReducer: Reducer<OrderBookState, Action> = (
+const orderBook: Reducer<OrderBookState, Action> = (
   state: OrderBookState = { ...initialState },
   action: Action
 ): OrderBookState => {
-  const { orderBookType } = action
   switch (action.type) {
-    case 'ADD_ORDER_BOOK_SNAPSHOT':
+    case 'ORDER_BOOK_SNAPSHOT':
       return {
         ...state,
-        [orderBookType]: {
-          ...state[orderBookType],
-          snapshots: [action.snapshot, ...state[orderBookType].snapshots].slice(
-            0,
-            snapshotLimit - 2
-          ),
+        pairs: {
+          ...state.pairs,
+          [action.orderBookType]: [
+            action.snapshot,
+            ...state.pairs[action.orderBookType],
+          ].slice(0, snapshotLimit - 2),
         },
       }
-    case 'SET_ORDER_BOOK_FETCHING':
+    case 'ORDER_BOOK_IS_LISTENING':
       return {
         ...state,
-        [orderBookType]: {
-          ...state[orderBookType],
-          isFetching: action.isFetching,
-        },
+        isListening: action.isListening,
+      }
+    case 'CHOSEN_ORDER_BOOK':
+      return {
+        ...state,
+        chosenPair: action.orderBookType,
       }
     // on init
     default:
@@ -72,4 +73,4 @@ const ordersReducer: Reducer<OrderBookState, Action> = (
   }
 }
 
-export default ordersReducer
+export default orderBook

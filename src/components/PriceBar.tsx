@@ -3,9 +3,9 @@ import React, { FunctionComponent } from 'react'
 import { Text, View } from 'react-native'
 import { connect } from 'react-redux'
 
-import { RootState } from '../../store'
-import { OrderBookState } from '../../store/orders/reducers'
-import styles from '../../style'
+import { RootState } from '../store'
+import { OrderBookState } from '../store/orders/reducers'
+import styles from '../style'
 
 const timestampToReadableDate = (timestamp?: number) => {
   if (timestamp) {
@@ -15,13 +15,13 @@ const timestampToReadableDate = (timestamp?: number) => {
 }
 
 interface PriceBarProps {
-  orders: OrderBookState
+  orderBook: OrderBookState
 }
 
 const PriceBar: FunctionComponent<PriceBarProps> = ({
-  orders,
+  orderBook,
 }: PriceBarProps) => {
-  const snapshots = orders.btceur.snapshots
+  const snapshots = orderBook.pairs[orderBook.chosenPair]
   const bidPrice =
     snapshots.length > 0 ? snapshots[0].orders.bids[0].price : 'n/a'
   const askPrice =
@@ -42,8 +42,8 @@ const PriceBar: FunctionComponent<PriceBarProps> = ({
 }
 
 const mapStateToProps = (state: RootState) => {
-  const { orders } = state
-  return { orders }
+  const { orderBook } = state
+  return { orderBook }
 }
 
 export default connect(mapStateToProps)(PriceBar)

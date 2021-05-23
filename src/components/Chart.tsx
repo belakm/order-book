@@ -1,22 +1,21 @@
 import * as scale from 'd3-scale'
 import React, { FunctionComponent } from 'react'
 import { View } from 'react-native'
-import { G, Line } from 'react-native-svg'
 import { Grid, StackedAreaChart, XAxis, YAxis } from 'react-native-svg-charts'
 import { connect } from 'react-redux'
 
-import { RootState } from '../../store'
-import { OrderBookState } from '../../store/orders/reducers'
-import styles from '../../style'
+import { RootState } from '../store'
+import { OrderBookState } from '../store/orders/reducers'
+import styles from '../style'
 
 interface PriceBarProps {
-  orders: OrderBookState
+  orderBook: OrderBookState
 }
 
 const PriceBar: FunctionComponent<PriceBarProps> = ({
-  orders,
+  orderBook,
 }: PriceBarProps) => {
-  const snapshots = orders.btceur.snapshots
+  const snapshots = orderBook.pairs[orderBook.chosenPair]
   const bids = snapshots.length > 0 ? snapshots[0].orders.bids : []
   const asks = snapshots.length > 0 ? snapshots[0].orders.asks : []
   const xMax = bids.length > 0 ? bids[bids.length - 1].price * 2 : 0
@@ -84,8 +83,8 @@ const PriceBar: FunctionComponent<PriceBarProps> = ({
 }
 
 const mapStateToProps = (state: RootState) => {
-  const { orders } = state
-  return { orders }
+  const { orderBook } = state
+  return { orderBook }
 }
 
 export default connect(mapStateToProps)(PriceBar)

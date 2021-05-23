@@ -1,1 +1,0 @@
-export const ORDERS_URL = 'https://www.bitstamp.net/api/v2/order_book/'
