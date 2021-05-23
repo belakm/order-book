@@ -2,60 +2,87 @@ import { StyleSheet } from 'react-native'
 
 export const colors = {
   background: '#111c2c',
-  chartBackground: '#000000',
   text: '#ffffff',
   loader: '#ffffff',
-}
-
-const viewStyles = {
-  backgroundColor: colors.background,
-  color: colors.text,
-}
-
-const padding = {
-  paddingVertical: '.2em',
-  paddingHorizontal: '1em',
+  bid: '#56a600',
+  ask: '#a60000',
+  button: '#263f63',
 }
 
 const styles = StyleSheet.create({
-  chart: {
-    backgroundColor: colors.chartBackground,
+  fullWidth: {
     width: '100%',
-    height: '70vh',
-    minHeight: '400px',
   },
-  topBar: {
-    ...viewStyles,
-    ...padding,
-    width: '100%',
-    height: '3em',
-    alignItems: 'flex-start',
-  },
-  priceBar: {
-    ...viewStyles,
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    height: '3em',
-  },
-  topBarImg: {
-    height: '100%',
-    width: '7em',
-  },
-  textFullWidth: {
-    width: '100%',
-    textAlign: 'center',
+  appColors: {
+    backgroundColor: colors.background,
     color: colors.text,
   },
-  body: {
-    ...viewStyles,
+  wrapper: {
+    paddingVertical: 12,
+    paddingHorizontal: 32,
   },
-  container: {
-    ...viewStyles,
-    ...padding,
-    flex: 1,
+  flexColumn: {
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    flexDirection: 'column',
+  },
+  flexRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  flexAlignCenter: {
+    justifyContent: 'center',
+  },
+  flexGrow: {
+    flex: 1,
+  },
+  chart: {
+    width: '100%',
+    minHeight: 400,
+  },
+  priceBox: {
+    paddingLeft: 12,
+    paddingRight: 12,
+  },
+  priceBoxDetail: {
+    fontWeight: 'bold',
+    backgroundColor: '#ffffff',
+    paddingVertical: 2,
+    paddingHorizontal: 4,
+    borderRadius: 2,
+    fontSize: 24,
+    color: 'white',
+  },
+  priceBoxDetailBid: {
+    backgroundColor: colors.bid,
+  },
+  priceBoxDetailAsk: {
+    backgroundColor: colors.ask,
+  },
+  logo: {
+    height: '100%',
+    width: 100,
+  },
+  mainContainer: {
+    paddingBottom: 64,
+  },
+  marginBottom: {
+    marginBottom: 12,
+  },
+  marginHorizontal: {
+    marginHorizontal: 12,
+  },
+  snapshotControl: {
+    width: '20%',
+  },
+  text: {
+    color: colors.text,
+    fontSize: 18,
+  },
+  title: {
+    color: colors.text,
+    fontSize: 24,
+    paddingTop: 24,
+    paddingBottom: 8,
   },
 })
 

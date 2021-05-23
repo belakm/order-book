@@ -1,5 +1,4 @@
 import React from 'react'
-import { View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { Provider as StoreProvider } from 'react-redux'
 
@@ -14,7 +13,9 @@ export default function App() {
     <StoreProvider store={store}>
       <ApiContextProvider>
         <TopBar />
-        <ScrollView style={styles.body}>
+        <ScrollView
+          style={[styles.appColors, styles.wrapper, styles.mainContainer]}
+        >
           <SnapshotViewer />
         </ScrollView>
       </ApiContextProvider>

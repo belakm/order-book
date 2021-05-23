@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 
 import { RootState } from '../store'
 import { OrderBookSnapshot, OrderBookPair } from '../store/orders/reducers'
-import styles from '../style'
+import styles, { colors } from '../style'
 
 interface PriceBarProps {
   snapshot: OrderBookSnapshot
@@ -19,32 +19,22 @@ const PriceBar: FunctionComponent<PriceBarProps> = ({
 }: PriceBarProps) => {
   const bids = snapshot.orders.bids
   const asks = snapshot.orders.asks
-  const xMax = bids.length > 0 ? bids[bids.length - 1].price * 2 : 0
-  const yMax = bids.length > 0 ? bids[Math.ceil(bids.length / 10)].sum : 0
-  const relevantBids = bids.filter(
-    (order) => order.price <= xMax && order.sum <= yMax
-  )
-  const relevantAsks = asks.filter(
-    (order) => order.price <= xMax && order.sum <= yMax
-  )
+  const currency = pair.slice(3).toUpperCase()
+  const cryptoCurrency = pair.slice(0, 3).toUpperCase()
 
   const chartData = []
-  for (let x = 0; x < relevantBids.length + relevantAsks.length; x++) {
+  for (let x = 0; x < bids.length + asks.length; x++) {
     chartData.push({
-      ask:
-        x < relevantBids.length ? 0 : relevantAsks[x - relevantBids.length].sum,
-      bid: x < relevantBids.length ? relevantBids[x].sum : 0,
-      price:
-        x < relevantBids.length
-          ? relevantBids[x].price
-          : relevantAsks[x - relevantBids.length].price,
+      ask: x < bids.length ? 0 : asks[x - bids.length].sum,
+      bid: x < bids.length ? bids[x].sum : 0,
+      price: x < bids.length ? bids[x].price : asks[x - bids.length].price,
     })
   }
 
   return (
-    <View style={styles.chart}>
+    <View style={[styles.chart, styles.appColors, styles.marginBottom]}>
       <StackedAreaChart
-        colors={['rgba(0,255,0,0.5)', 'rgba(255,0,0,0.5)']}
+        colors={[`${colors.bid}aa`, `${colors.ask}aa`]}
         keys={['bid', 'ask']}
         style={{ flex: 1 }}
         data={chartData}
@@ -63,6 +53,7 @@ const PriceBar: FunctionComponent<PriceBarProps> = ({
         contentInset={{ top: 10, bottom: 10 }}
         svg={{ fill: 'white', fontSize: 12, fontWeight: 'bold', y: 5 }}
         scale={scale.scaleLinear}
+        formatLabel={(value) => `${value} ${cryptoCurrency}`}
       />
       <XAxis
         data={chartData}
@@ -75,9 +66,9 @@ const PriceBar: FunctionComponent<PriceBarProps> = ({
         }}
         xAccessor={({ item }) => item.price}
         scale={scale.scaleLinear}
-        numberOfTicks={12}
-        contentInset={{ left: 10, right: 10 }}
-        formatLabel={(value, index) => value}
+        numberOfTicks={3}
+        contentInset={{ left: 40, right: 10 }}
+        formatLabel={(value) => `${value} ${currency}`}
       />
     </View>
   )
