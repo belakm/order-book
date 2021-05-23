@@ -1,10 +1,8 @@
 import { DateTime } from 'luxon'
 import React, { FunctionComponent } from 'react'
 import { Text, View } from 'react-native'
-import { connect } from 'react-redux'
 
-import { RootState } from '../store'
-import { OrderBookState } from '../store/orders/reducers'
+import { OrderBookSnapshot, OrderBookState } from '../store/orders/reducers'
 import styles from '../style'
 
 const timestampToReadableDate = (timestamp?: number) => {
@@ -15,35 +13,26 @@ const timestampToReadableDate = (timestamp?: number) => {
 }
 
 interface PriceBarProps {
-  orderBook: OrderBookState
+  snapshot: OrderBookSnapshot
 }
 
 const PriceBar: FunctionComponent<PriceBarProps> = ({
-  orderBook,
+  snapshot,
 }: PriceBarProps) => {
-  const snapshots = orderBook.pairs[orderBook.chosenPair]
-  const bidPrice =
-    snapshots.length > 0 ? snapshots[0].orders.bids[0].price : 'n/a'
-  const askPrice =
-    snapshots.length > 0 ? snapshots[0].orders.asks[0].price : 'n/a'
-  const latestTimestampDate =
-    snapshots.length > 0 ? snapshots[0].timestamp : undefined
+  const { timestamp, orders } = snapshot
+  const bidPrice = orders.bids.length > 0 ? orders.bids[0].price : 'n/a'
+  const askPrice = orders.asks.length > 0 ? orders.asks[0].price : 'n/a'
 
   return (
-    <View style={styles.statusBar}>
+    <View style={styles.priceBar}>
       <Text style={styles.textFullWidth}>
         BTC/EUR | bid: {bidPrice} | ask: {askPrice}
       </Text>
       <Text style={styles.textFullWidth}>
-        {timestampToReadableDate(latestTimestampDate)}
+        {timestampToReadableDate(timestamp)}
       </Text>
     </View>
   )
 }
 
-const mapStateToProps = (state: RootState) => {
-  const { orderBook } = state
-  return { orderBook }
-}
-
-export default connect(mapStateToProps)(PriceBar)
+export default PriceBar

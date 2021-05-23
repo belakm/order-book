@@ -2,7 +2,10 @@ import React, { createContext, ReactNode, useEffect, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 
 import { RootState } from '../store'
-import { addOrderBookSnapshot } from '../store/orders/actions'
+import {
+  addOrderOrderBookSnapshot,
+  setOrderBookIsListening,
+} from '../store/orders/actions'
 import { Order, OrderBookPair, OrderBookState } from '../store/orders/reducers'
 
 const parseOrders = (orders: [number, number][], ordersAreBids: boolean) => {
@@ -59,6 +62,7 @@ const ApiContextProvider = ({
     const websocket = new WebSocket('wss://ws.bitstamp.net')
     console.log('START', websocket)
     websocket.onopen = () => {
+      websocket.send(socketMessage(true, orderBook.chosenPair))
       setIsConnectionOpen(true)
     }
     websocket.onclose = () => {
@@ -75,7 +79,7 @@ const ApiContextProvider = ({
         const bids: Order[] = parseOrders(messageData.bids, true).reverse()
         const asks: Order[] = parseOrders(messageData.asks, false)
         dispatch(
-          addOrderBookSnapshot({
+          addOrderOrderBookSnapshot({
             orderBookType: orderBook.chosenPair,
             snapshot: {
               timestamp: Math.round(Number(messageData.microtimestamp) / 1000),
@@ -100,10 +104,11 @@ const ApiContextProvider = ({
         setCurrentlyListenedPair(pair)
       }
     },
-    setIsListening: (shouldListen: boolean) => {
+    setIsListening: (isListening: boolean) => {
       if (websocket != null && websocket.readyState === 1 && isConnectionOpen) {
-        websocket.send(socketMessage(shouldListen, orderBook.chosenPair))
+        websocket.send(socketMessage(isListening, orderBook.chosenPair))
       }
+      dispatch(setOrderBookIsListening({ isListening }))
     },
   }
 

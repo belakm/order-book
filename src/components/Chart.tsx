@@ -5,19 +5,20 @@ import { Grid, StackedAreaChart, XAxis, YAxis } from 'react-native-svg-charts'
 import { connect } from 'react-redux'
 
 import { RootState } from '../store'
-import { OrderBookState } from '../store/orders/reducers'
+import { OrderBookSnapshot, OrderBookPair } from '../store/orders/reducers'
 import styles from '../style'
 
 interface PriceBarProps {
-  orderBook: OrderBookState
+  snapshot: OrderBookSnapshot
+  pair: OrderBookPair
 }
 
 const PriceBar: FunctionComponent<PriceBarProps> = ({
-  orderBook,
+  snapshot,
+  pair,
 }: PriceBarProps) => {
-  const snapshots = orderBook.pairs[orderBook.chosenPair]
-  const bids = snapshots.length > 0 ? snapshots[0].orders.bids : []
-  const asks = snapshots.length > 0 ? snapshots[0].orders.asks : []
+  const bids = snapshot.orders.bids
+  const asks = snapshot.orders.asks
   const xMax = bids.length > 0 ? bids[bids.length - 1].price * 2 : 0
   const yMax = bids.length > 0 ? bids[Math.ceil(bids.length / 10)].sum : 0
   const relevantBids = bids.filter(

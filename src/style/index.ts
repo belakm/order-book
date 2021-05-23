@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native'
 
-const colors = {
+export const colors = {
   background: '#111c2c',
   chartBackground: '#000000',
   text: '#ffffff',
+  loader: '#ffffff',
 }
 
 const viewStyles = {
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
     height: '3em',
     alignItems: 'flex-start',
   },
-  statusBar: {
+  priceBar: {
     ...viewStyles,
     flex: 1,
     alignItems: 'center',
@@ -41,10 +42,9 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '7em',
   },
-  text: {
-    color: colors.text,
-  },
   textFullWidth: {
+    width: '100%',
+    textAlign: 'center',
     color: colors.text,
   },
   body: {

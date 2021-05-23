@@ -3,8 +3,7 @@ import { View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { Provider as StoreProvider } from 'react-redux'
 
-import Chart from './src/components/Chart'
-import PriceBar from './src/components/PriceBar'
+import SnapshotViewer from './src/components/SnapshotViewer'
 import TopBar from './src/components/TopBar'
 import ApiContextProvider from './src/contexts/ApiContext'
 import store from './src/store'
@@ -16,10 +15,7 @@ export default function App() {
       <ApiContextProvider>
         <TopBar />
         <ScrollView style={styles.body}>
-          <View style={styles.container}>
-            <Chart />
-            <PriceBar />
-          </View>
+          <SnapshotViewer />
         </ScrollView>
       </ApiContextProvider>
     </StoreProvider>

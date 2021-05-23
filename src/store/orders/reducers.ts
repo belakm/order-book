@@ -15,7 +15,7 @@ export interface Orders {
   bids: Order[]
 }
 
-export interface BookSnapshot {
+export interface OrderBookSnapshot {
   timestamp: number
   orders: Orders
 }
@@ -27,7 +27,7 @@ export type OrderBookState = {
   snapshotIndex: number
   chosenPair: OrderBookPair
   pairs: {
-    [key in OrderBookPair]: BookSnapshot[]
+    [key in OrderBookPair]: OrderBookSnapshot[]
   }
 }
 
@@ -66,6 +66,11 @@ const orderBook: Reducer<OrderBookState, Action> = (
       return {
         ...state,
         chosenPair: action.orderBookType,
+      }
+    case 'SNAPSHOT_INDEX':
+      return {
+        ...state,
+        snapshotIndex: action.index,
       }
     // on init
     default:

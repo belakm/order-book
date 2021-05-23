@@ -1,10 +1,10 @@
-import { BookSnapshot, OrderBookPair } from './reducers'
+import { OrderBookSnapshot, OrderBookPair } from './reducers'
 
 // Action Definition
-export interface AddOrderBookSnapshot {
+export interface AddOrderOrderBookSnapshot {
   type: 'ORDER_BOOK_SNAPSHOT'
   orderBookType: OrderBookPair
-  snapshot: BookSnapshot
+  snapshot: OrderBookSnapshot
 }
 export interface SetOrderBookListening {
   type: 'ORDER_BOOK_IS_LISTENING'
@@ -14,21 +14,26 @@ export interface SetOrderBookChosenBook {
   type: 'CHOSEN_ORDER_BOOK'
   orderBookType: OrderBookPair
 }
+export interface SetSnapshotIndex {
+  type: 'SNAPSHOT_INDEX'
+  index: number
+}
 
 // Union Action Types
 export type Action =
-  | AddOrderBookSnapshot
+  | AddOrderOrderBookSnapshot
   | SetOrderBookListening
   | SetOrderBookChosenBook
+  | SetSnapshotIndex
 
 // Action Creators
-export const addOrderBookSnapshot = ({
+export const addOrderOrderBookSnapshot = ({
   orderBookType,
   snapshot,
 }: {
   orderBookType: OrderBookPair
-  snapshot: BookSnapshot
-}): AddOrderBookSnapshot => ({
+  snapshot: OrderBookSnapshot
+}): AddOrderOrderBookSnapshot => ({
   type: 'ORDER_BOOK_SNAPSHOT',
   orderBookType,
   snapshot,
@@ -52,21 +57,11 @@ export const setChosenOrderBook = ({
   orderBookType,
 })
 
-/* // Actions
-export const fetchLatestOrders = (
-  orderBookType: OrderBookPair
-): ThunkAction<Promise<void>, object, object, AnyAction> => {
-  return async (
-    dispatch: ThunkDispatch<object, object, AnyAction>
-  ): Promise<void> => {
-    dispatch(setOrderBookIsFetching({ orderBookType, isFetching: true }))
-    try {
-      const snapshot = await fetchOrders(orderBookType)
-      dispatch(setOrderBookIsFetching({ orderBookType, isFetching: false }))
-      dispatch(addOrderBookSnapshot({ orderBookType, snapshot }))
-    } catch (e) {
-      // TODO: dispatch error
-    }
-  }
-}
- */
+export const setSnapshotIndex = ({
+  index,
+}: {
+  index: number
+}): SetSnapshotIndex => ({
+  type: 'SNAPSHOT_INDEX',
+  index,
+})
