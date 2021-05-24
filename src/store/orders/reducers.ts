@@ -45,8 +45,14 @@ const orderBook: Reducer<OrderBookState, Action> = (
   state: OrderBookState = { ...initialState },
   action: Action
 ): OrderBookState => {
+  let lastTimestamp
   switch (action.type) {
     case 'ORDER_BOOK_SNAPSHOT':
+      lastTimestamp =
+        state.pairs[action.orderBookType].length > 0
+          ? state.pairs[action.orderBookType][0].timestamp
+          : 0
+      if (action.snapshot.timestamp - lastTimestamp < 500) return state
       return {
         ...state,
         pairs: {

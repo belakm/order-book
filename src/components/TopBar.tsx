@@ -13,7 +13,7 @@ const TopBar: FunctionComponent = () => {
         styles.flexRow,
       ]}
     >
-      <Text style={styles.title}>BITSTAMP depth chart</Text>
+      <Text style={styles.title}>@ BITSTAMP</Text>
     </View>
   )
 }

@@ -31,7 +31,7 @@ const PriceBar: FunctionComponent<PriceBarProps> = ({
   const askPrice = orders.asks.length > 0 ? orders.asks[0].price : 'n/a'
 
   return (
-    <View style={[styles.flexColumn, styles.appColors]}>
+    <View style={[styles.flexColumn, styles.appColors, styles.marginBottom]}>
       <Text style={[styles.marginBottom, styles.text]}>
         {pairToReadable(pair)} at {timestampToReadableDate(timestamp)}
       </Text>

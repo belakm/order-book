@@ -1,12 +1,13 @@
 import { StyleSheet } from 'react-native'
 
 export const colors = {
-  background: '#111c2c',
+  background: '#040f1f',
   text: '#ffffff',
   loader: '#ffffff',
   bid: '#56a600',
   ask: '#a60000',
   button: '#263f63',
+  bitstamp: '#139f48',
 }
 
 const styles = StyleSheet.create({
@@ -18,7 +19,6 @@ const styles = StyleSheet.create({
     color: colors.text,
   },
   wrapper: {
-    paddingVertical: 12,
     paddingHorizontal: 32,
   },
   flexColumn: {
@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     paddingBottom: 64,
+    paddingTop: 12,
   },
   marginBottom: {
     marginBottom: 12,
@@ -79,10 +80,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   title: {
-    color: colors.text,
+    color: colors.bitstamp,
+    fontWeight: 'bold',
     fontSize: 24,
-    paddingTop: 24,
-    paddingBottom: 8,
+    paddingVertical: 36,
+    height: 48,
   },
 })
 

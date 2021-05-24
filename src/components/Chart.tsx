@@ -1,11 +1,16 @@
 import * as scale from 'd3-scale'
 import React, { FunctionComponent } from 'react'
 import { View } from 'react-native'
+import { G, Line, Rect, Text } from 'react-native-svg'
 import { Grid, StackedAreaChart, XAxis, YAxis } from 'react-native-svg-charts'
 import { connect } from 'react-redux'
 
 import { RootState } from '../store'
-import { OrderBookSnapshot, OrderBookPair } from '../store/orders/reducers'
+import {
+  OrderBookSnapshot,
+  OrderBookPair,
+  Order,
+} from '../store/orders/reducers'
 import styles, { colors } from '../style'
 
 interface PriceBarProps {
@@ -13,15 +18,74 @@ interface PriceBarProps {
   pair: OrderBookPair
 }
 
+// missing docs
+interface PriceLineProps {
+  x?: Function
+  price: number
+  currency: string
+}
+
+const convertToStepLine = (orders: Order[]): Order[] =>
+  orders.length > 0
+    ? orders.reduce((orderSet: Order[], order: Order, index) => {
+        const { price, volume } = order
+        const step =
+          index < orders.length - 1
+            ? [
+                {
+                  price: price + 0.0001,
+                  sum: orders[index + 1].sum,
+                  volume,
+                },
+              ]
+            : []
+        return [...orderSet, order, ...step]
+      }, [])
+    : []
+
+const PriceLine = ({ x = () => {}, price = 0, currency }: PriceLineProps) => (
+  <G y="0">
+    <Line
+      key="zero-axis"
+      y1="0%"
+      y2="100%"
+      x1={x(price)}
+      x2={x(price)}
+      stroke="grey"
+      strokeDasharray={[4, 8]}
+      strokeWidth={2}
+    />
+    <Rect
+      y={10}
+      x={x(price) - 70}
+      height={30}
+      width={140}
+      stroke="grey"
+      fill="#192f4f"
+      ry={10}
+      rx={10}
+    />
+    <Text
+      y={27}
+      x={x(price)}
+      alignmentBaseline="middle"
+      textAnchor="middle"
+      fill="white"
+    >
+      {`${price} ${currency}`}
+    </Text>
+  </G>
+)
+
 const PriceBar: FunctionComponent<PriceBarProps> = ({
   snapshot,
   pair,
 }: PriceBarProps) => {
-  const bids = snapshot.orders.bids
-  const asks = snapshot.orders.asks
+  const bids = convertToStepLine(snapshot.orders.bids)
+  const asks = convertToStepLine(snapshot.orders.asks)
   const currency = pair.slice(3).toUpperCase()
   const cryptoCurrency = pair.slice(0, 3).toUpperCase()
-
+  const lastAsk = asks[0].price
   const chartData = []
   for (let x = 0; x < bids.length + asks.length; x++) {
     chartData.push({
@@ -46,6 +110,7 @@ const PriceBar: FunctionComponent<PriceBarProps> = ({
         showGrid
       >
         <Grid svg={{ stroke: 'rgba(255,255,255,.1)' }} />
+        <PriceLine currency={currency} price={lastAsk} />
       </StackedAreaChart>
       <YAxis
         style={{ position: 'absolute', top: 0, bottom: 0 }}

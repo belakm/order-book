@@ -8,7 +8,10 @@ import {
 } from '../store/orders/actions'
 import { Order, OrderBookPair, OrderBookState } from '../store/orders/reducers'
 
-const parseOrders = (orders: [number, number][], ordersAreBids: boolean) => {
+const parseOrders = (
+  orders: [number, number][],
+  ordersAreBids: boolean
+): Order[] => {
   let sum = 0
   return orders.length > 0
     ? orders
@@ -32,7 +35,7 @@ const socketMessage = (shouldListen: boolean, orderBookType: OrderBookPair) => {
   })
 }
 
-export interface ApiContextProps {
+interface ApiContextProps {
   changePair: (pair: OrderBookPair) => void
   setIsListening: (isListening: boolean) => void
 }
@@ -42,7 +45,7 @@ export const ApiContext = createContext<ApiContextProps>({
   setIsListening: () => {},
 })
 
-export interface ApiContextProviderProps {
+interface ApiContextProviderProps {
   children: ReactNode
   orderBook: OrderBookState
 }

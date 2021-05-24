@@ -5,9 +5,9 @@ import { useDispatch } from 'react-redux'
 import { ApiContext } from '../contexts/ApiContext'
 import { setSnapshotIndex } from '../store/orders/actions'
 import { OrderBookState } from '../store/orders/reducers'
-import styles, { colors } from '../style'
+import styles from '../style'
 
-export interface SnapshotControlsProps {
+interface SnapshotControlsProps {
   orderBook: OrderBookState
 }
 

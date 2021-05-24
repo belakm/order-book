@@ -1,5 +1,5 @@
 import React from 'react'
-import { ActivityIndicator, Button, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import { RootState } from '../store'
@@ -9,7 +9,7 @@ import Chart from './Chart'
 import PriceBar from './PriceBar'
 import SnapshotControls from './SnapshotControls'
 
-export interface SnapshotProps {
+interface SnapshotProps {
   orderBook: OrderBookState
 }
 
@@ -18,9 +18,9 @@ const SnapshotViewer = ({ orderBook }: SnapshotProps) => {
     orderBook.pairs[orderBook.chosenPair][orderBook.snapshotIndex]
   return currentSnapshot ? (
     <View style={[styles.appColors, styles.flexColumn]}>
-      <Chart pair={orderBook.chosenPair} snapshot={currentSnapshot} />
-      <SnapshotControls orderBook={orderBook} />
       <PriceBar pair={orderBook.chosenPair} snapshot={currentSnapshot} />
+      <SnapshotControls orderBook={orderBook} />
+      <Chart pair={orderBook.chosenPair} snapshot={currentSnapshot} />
     </View>
   ) : (
     <ActivityIndicator size="large" color={colors.loader} />
