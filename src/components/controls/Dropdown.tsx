@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, Pressable } from 'react-native'
 
-import styles from '../style'
+import styles from '../../style'
 
 interface DropdownValue<T> {
   key: T
@@ -46,15 +46,16 @@ const Dropdown = <T,>({
       </Pressable>
       {isOpen && (
         <View style={[styles.dropdownOptions, styles.material]}>
-          {options.map((item) =>
-            item.key === selected?.key ? null : (
+          {options.map(({ key, text }, index) =>
+            key === selected?.key ? null : (
               <Text
+                key={index}
                 style={[styles.text, styles.materialPadding]}
                 onPress={() => {
-                  setSelected(item)
+                  setSelected({ text, key })
                 }}
               >
-                {item.text}
+                {text}
               </Text>
             )
           )}

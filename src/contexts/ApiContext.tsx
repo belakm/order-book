@@ -161,7 +161,6 @@ const ApiContextProvider = ({
 
   const apiProvider: ApiContextProps = {
     setIsListening: (shouldListen: boolean) => {
-      console.log(shouldListen)
       if (
         websocket != null &&
         websocket.readyState === 1 &&

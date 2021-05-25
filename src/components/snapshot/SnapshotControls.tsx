@@ -2,10 +2,10 @@ import React, { useContext } from 'react'
 import { Button, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 
-import { ApiContext } from '../contexts/ApiContext'
-import { setSnapshotIndex } from '../store/orders/actions'
-import { OrderBookState } from '../store/orders/reducers'
-import styles from '../style'
+import { ApiContext } from '../../contexts/ApiContext'
+import { setSnapshotIndex } from '../../store/orders/actions'
+import { OrderBookState } from '../../store/orders/reducers'
+import styles from '../../style'
 
 interface SnapshotControlsProps {
   orderBook: OrderBookState
@@ -17,7 +17,7 @@ const SnapshotControls = ({ orderBook }: SnapshotControlsProps) => {
   return (
     <View
       style={[
-        styles.appColors,
+        styles.bodyBackground,
         styles.flexRow,
         styles.flexAlignCenter,
         styles.fullWidth,
@@ -26,6 +26,7 @@ const SnapshotControls = ({ orderBook }: SnapshotControlsProps) => {
     >
       <View style={[styles.snapshotControl]}>
         <Button
+          color="white"
           disabled={
             orderBook.isListening ||
             orderBook.snapshotIndex >=
@@ -39,6 +40,7 @@ const SnapshotControls = ({ orderBook }: SnapshotControlsProps) => {
       </View>
       <View style={[styles.flexGrow, styles.marginHorizontal]}>
         <Button
+          color="white"
           onPress={() => {
             if (!orderBook.isListening) {
               dispatch(setSnapshotIndex({ index: 0 }))
@@ -50,6 +52,7 @@ const SnapshotControls = ({ orderBook }: SnapshotControlsProps) => {
       </View>
       <View style={[styles.snapshotControl]}>
         <Button
+          color="white"
           disabled={orderBook.isListening || orderBook.snapshotIndex === 0}
           onPress={() =>
             dispatch(setSnapshotIndex({ index: orderBook.snapshotIndex - 1 }))

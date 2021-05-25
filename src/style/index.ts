@@ -1,11 +1,11 @@
 import { StyleSheet } from 'react-native'
 
 export const colors = {
-  background: '#040f1f',
-  material: '#0b2652',
+  background: '#101010', //'#040f1f',
+  material: '#212121',
+  materialBorder: '#333333',
   text: '#ffffff',
-  textLight: '#395785',
-  materialBorder: '#395785',
+  textLight: '#777777',
   loader: '#ffffff',
   bid: '#098538',
   ask: '#850909',
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   fullWidth: {
     width: '100%',
   },
-  appColors: {
+  bodyBackground: {
     backgroundColor: colors.background,
     color: colors.text,
   },
@@ -42,16 +42,22 @@ const styles = StyleSheet.create({
   flexGrow: {
     flex: 1,
   },
-  chart: {
+  chartPortrait: {
     width: '100%',
-    minHeight: 400,
+    height: 400,
+  },
+  chartLandscape: {
+    height: 140,
+    width: '100%',
   },
   priceBoxDetail: {
     fontWeight: 'bold',
-    borderRadius: 2,
+    borderRadius: 4,
     borderWidth: 1,
-    fontSize: 24,
+    fontSize: 20,
     color: 'white',
+    width: 125,
+    textAlign: 'center',
   },
   priceBoxDetailBid: {
     backgroundColor: colors.bid,
@@ -100,8 +106,17 @@ const styles = StyleSheet.create({
     color: colors.bitstamp,
     fontWeight: 'bold',
     fontSize: 24,
-    paddingVertical: 36,
-    height: 48,
+  },
+  timeRow: {
+    alignItems: 'center',
+    width: '100%',
+    flexDirection: 'row',
+    marginVertical: 6,
+  },
+  topBar: {
+    height: 64,
+    paddingTop: 24,
+    zIndex: 1,
   },
   wrapper: {
     paddingHorizontal: 32,

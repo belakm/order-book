@@ -1,30 +1,24 @@
 import * as scale from 'd3-scale'
-import React, { FunctionComponent } from 'react'
-import { View } from 'react-native'
-import { G, Line, Rect, Text } from 'react-native-svg'
+import React, { FunctionComponent, useEffect, useState } from 'react'
+import { Dimensions, View } from 'react-native'
 import { Grid, StackedAreaChart, XAxis, YAxis } from 'react-native-svg-charts'
-import { connect } from 'react-redux'
 
-import { RootState } from '../store'
 import {
   OrderBookSnapshot,
   OrderBookPair,
   Order,
-} from '../store/orders/reducers'
-import styles, { colors } from '../style'
+} from '../../store/orders/reducers'
+import styles, { colors } from '../../style'
+import PriceLine from './Priceline'
 
-interface PriceBarProps {
+interface ChartProps {
   snapshot: OrderBookSnapshot
   pair: OrderBookPair
 }
 
-// missing docs
-interface PriceLineProps {
-  x?: Function
-  price: number
-  currency: string
-}
-
+/**
+ * Adds additional points to the data set so the chart connects points in a step-line manner.
+ */
 const convertToStepLine = (orders: Order[]): Order[] =>
   orders.length > 0
     ? orders.reduce((orderSet: Order[], order: Order, index) => {
@@ -43,50 +37,33 @@ const convertToStepLine = (orders: Order[]): Order[] =>
       }, [])
     : []
 
-const PriceLine = ({ x = () => {}, price = 0, currency }: PriceLineProps) => (
-  <G y="0">
-    <Line
-      key="zero-axis"
-      y1="0%"
-      y2="100%"
-      x1={x(price)}
-      x2={x(price)}
-      stroke="grey"
-      strokeDasharray={[4, 8]}
-      strokeWidth={2}
-    />
-    <Rect
-      y={10}
-      x={x(price) - 70}
-      height={30}
-      width={140}
-      stroke={colors.materialBorder}
-      fill={colors.material}
-      ry={4}
-      rx={4}
-    />
-    <Text
-      y={27}
-      x={x(price)}
-      alignmentBaseline="middle"
-      textAnchor="middle"
-      fill="white"
-    >
-      {`${price.toFixed(2)} ${currency}`}
-    </Text>
-  </G>
-)
-
-const PriceBar: FunctionComponent<PriceBarProps> = ({
+/**
+ * Renders a depth chart, uses react-native-svg-charts under the hood.
+ */
+const Chart: FunctionComponent<ChartProps> = ({
   snapshot,
   pair,
-}: PriceBarProps) => {
+}: ChartProps) => {
+  const { width } = Dimensions.get('window')
+  const [isPortraitMode, setIsPortraitMode] = useState<boolean>(width < 500)
   const bids = convertToStepLine(snapshot.orders.bids)
   const asks = convertToStepLine(snapshot.orders.asks)
   const currency = pair.slice(3).toUpperCase()
   const cryptoCurrency = pair.slice(0, 3).toUpperCase()
   const lastAsk = asks[0].price
   const chartData = []
+  const chartStyles = isPortraitMode
+    ? [styles.chartPortrait]
+    : [styles.chartLandscape]
+
+  useEffect(() => {
+    Dimensions.addEventListener('change', () => {
+      const { width } = Dimensions.get('window')
+      setIsPortraitMode(width < 500)
+    })
+  }, [])
+
+  // transform into a shape that is understood by react-native-svg-charts
   for (let x = 0; x < bids.length + asks.length; x++) {
     chartData.push({
       ask: x < bids.length ? 0 : asks[x - bids.length].sum,
@@ -96,7 +73,7 @@ const PriceBar: FunctionComponent<PriceBarProps> = ({
   }
 
   return (
-    <View style={[styles.chart, styles.appColors, styles.marginBottom]}>
+    <View style={[...chartStyles, styles.bodyBackground, styles.marginBottom]}>
       <StackedAreaChart
         colors={[`${colors.bid}aa`, `${colors.ask}aa`]}
         keys={['bid', 'ask']}
@@ -106,7 +83,7 @@ const PriceBar: FunctionComponent<PriceBarProps> = ({
         xAccessor={({ item }) => item.price}
         xScale={scale.scaleLinear}
         yScale={scale.scaleLinear}
-        numberOfTicks={9}
+        numberOfTicks={isPortraitMode ? 8 : 4}
         showGrid
       >
         <Grid svg={{ stroke: 'rgba(255,255,255,.1)' }} />
@@ -118,6 +95,7 @@ const PriceBar: FunctionComponent<PriceBarProps> = ({
         contentInset={{ top: 10, bottom: 10 }}
         svg={{ fill: 'white', fontSize: 12, fontWeight: 'bold', y: 5 }}
         scale={scale.scaleLinear}
+        numberOfTicks={isPortraitMode ? 8 : 4}
         formatLabel={(value) => `${value} ${cryptoCurrency}`}
       />
       <XAxis
@@ -131,17 +109,12 @@ const PriceBar: FunctionComponent<PriceBarProps> = ({
         }}
         xAccessor={({ item }) => item.price}
         scale={scale.scaleLinear}
-        numberOfTicks={3}
-        contentInset={{ left: 40, right: 10 }}
+        numberOfTicks={isPortraitMode ? 2 : 4}
+        contentInset={{ left: 80, right: 10 }}
         formatLabel={(value) => `${value} ${currency}`}
       />
     </View>
   )
 }
 
-const mapStateToProps = (state: RootState) => {
-  const { orderBook } = state
-  return { orderBook }
-}
-
-export default connect(mapStateToProps)(PriceBar)
+export default Chart

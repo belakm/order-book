@@ -52,7 +52,8 @@ const orderBook: Reducer<OrderBookState, Action> = (
         state.pairs[action.orderBookPair].length > 0
           ? state.pairs[action.orderBookPair][0].timestamp
           : 0
-      if (action.snapshot.timestamp - lastTimestamp < 500) return state
+      if (!state.isListening || action.snapshot.timestamp - lastTimestamp < 500)
+        return state
       return {
         ...state,
         pairs: {
