@@ -60,10 +60,10 @@ const PriceLine = ({ x = () => {}, price = 0, currency }: PriceLineProps) => (
       x={x(price) - 70}
       height={30}
       width={140}
-      stroke="grey"
-      fill="#192f4f"
-      ry={10}
-      rx={10}
+      stroke={colors.materialBorder}
+      fill={colors.material}
+      ry={4}
+      rx={4}
     />
     <Text
       y={27}
@@ -72,7 +72,7 @@ const PriceLine = ({ x = () => {}, price = 0, currency }: PriceLineProps) => (
       textAnchor="middle"
       fill="white"
     >
-      {`${price} ${currency}`}
+      {`${price.toFixed(2)} ${currency}`}
     </Text>
   </G>
 )

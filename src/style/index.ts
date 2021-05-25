@@ -2,10 +2,13 @@ import { StyleSheet } from 'react-native'
 
 export const colors = {
   background: '#040f1f',
+  material: '#0b2652',
   text: '#ffffff',
+  textLight: '#395785',
+  materialBorder: '#395785',
   loader: '#ffffff',
-  bid: '#56a600',
-  ask: '#a60000',
+  bid: '#098538',
+  ask: '#850909',
   button: '#263f63',
   bitstamp: '#139f48',
 }
@@ -18,8 +21,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     color: colors.text,
   },
-  wrapper: {
-    paddingHorizontal: 32,
+  dropdownOptions: {
+    width: '100%',
+    position: 'absolute',
+    left: 0,
+    top: 40,
+    maxHeight: 200,
   },
   flexColumn: {
     alignItems: 'center',
@@ -39,24 +46,20 @@ const styles = StyleSheet.create({
     width: '100%',
     minHeight: 400,
   },
-  priceBox: {
-    paddingLeft: 12,
-    paddingRight: 12,
-  },
   priceBoxDetail: {
     fontWeight: 'bold',
-    backgroundColor: '#ffffff',
-    paddingVertical: 2,
-    paddingHorizontal: 4,
     borderRadius: 2,
+    borderWidth: 1,
     fontSize: 24,
     color: 'white',
   },
   priceBoxDetailBid: {
     backgroundColor: colors.bid,
+    borderColor: '#3bb56c',
   },
   priceBoxDetailAsk: {
     backgroundColor: colors.ask,
+    borderColor: '#b53d3b',
   },
   logo: {
     height: '100%',
@@ -65,6 +68,16 @@ const styles = StyleSheet.create({
   mainContainer: {
     paddingBottom: 64,
     paddingTop: 12,
+  },
+  material: {
+    backgroundColor: colors.material,
+    borderWidth: 1,
+    borderColor: colors.materialBorder,
+    borderRadius: 4,
+  },
+  materialPadding: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
   },
   marginBottom: {
     marginBottom: 12,
@@ -79,12 +92,19 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontSize: 18,
   },
+  textLight: {
+    color: colors.textLight,
+    fontSize: 18,
+  },
   title: {
     color: colors.bitstamp,
     fontWeight: 'bold',
     fontSize: 24,
     paddingVertical: 36,
     height: 48,
+  },
+  wrapper: {
+    paddingHorizontal: 32,
   },
 })
 

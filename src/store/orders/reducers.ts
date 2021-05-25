@@ -2,7 +2,7 @@ import { Reducer } from 'redux'
 
 import { Action } from './actions'
 
-const snapshotLimit = 100
+export const snapshotLimit = 100
 
 export interface Order {
   volume: number
@@ -49,17 +49,17 @@ const orderBook: Reducer<OrderBookState, Action> = (
   switch (action.type) {
     case 'ORDER_BOOK_SNAPSHOT':
       lastTimestamp =
-        state.pairs[action.orderBookType].length > 0
-          ? state.pairs[action.orderBookType][0].timestamp
+        state.pairs[action.orderBookPair].length > 0
+          ? state.pairs[action.orderBookPair][0].timestamp
           : 0
       if (action.snapshot.timestamp - lastTimestamp < 500) return state
       return {
         ...state,
         pairs: {
           ...state.pairs,
-          [action.orderBookType]: [
+          [action.orderBookPair]: [
             action.snapshot,
-            ...state.pairs[action.orderBookType],
+            ...state.pairs[action.orderBookPair],
           ].slice(0, snapshotLimit - 2),
         },
       }
@@ -71,7 +71,7 @@ const orderBook: Reducer<OrderBookState, Action> = (
     case 'CHOSEN_ORDER_BOOK':
       return {
         ...state,
-        chosenPair: action.orderBookType,
+        chosenPair: action.orderBookPair,
       }
     case 'SNAPSHOT_INDEX':
       return {

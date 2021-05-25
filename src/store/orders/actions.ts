@@ -3,7 +3,7 @@ import { OrderBookSnapshot, OrderBookPair } from './reducers'
 // Action Definition
 export interface AddOrderOrderBookSnapshot {
   type: 'ORDER_BOOK_SNAPSHOT'
-  orderBookType: OrderBookPair
+  orderBookPair: OrderBookPair
   snapshot: OrderBookSnapshot
 }
 export interface SetOrderBookListening {
@@ -12,7 +12,7 @@ export interface SetOrderBookListening {
 }
 export interface SetOrderBookChosenBook {
   type: 'CHOSEN_ORDER_BOOK'
-  orderBookType: OrderBookPair
+  orderBookPair: OrderBookPair
 }
 export interface SetSnapshotIndex {
   type: 'SNAPSHOT_INDEX'
@@ -28,14 +28,14 @@ export type Action =
 
 // Action Creators
 export const addOrderOrderBookSnapshot = ({
-  orderBookType,
+  orderBookPair,
   snapshot,
 }: {
-  orderBookType: OrderBookPair
+  orderBookPair: OrderBookPair
   snapshot: OrderBookSnapshot
 }): AddOrderOrderBookSnapshot => ({
   type: 'ORDER_BOOK_SNAPSHOT',
-  orderBookType,
+  orderBookPair,
   snapshot,
 })
 
@@ -48,13 +48,13 @@ export const setOrderBookIsListening = ({
   isListening,
 })
 
-export const setChosenOrderBook = ({
-  orderBookType,
+export const setChosenPair = ({
+  orderBookPair,
 }: {
-  orderBookType: OrderBookPair
+  orderBookPair: OrderBookPair
 }): SetOrderBookChosenBook => ({
   type: 'CHOSEN_ORDER_BOOK',
-  orderBookType,
+  orderBookPair,
 })
 
 export const setSnapshotIndex = ({

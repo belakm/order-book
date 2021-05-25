@@ -1,4 +1,10 @@
-import React, { createContext, ReactNode, useEffect, useState } from 'react'
+import React, {
+  createContext,
+  Dispatch,
+  ReactNode,
+  useEffect,
+  useState,
+} from 'react'
 import { connect, useDispatch } from 'react-redux'
 
 import { RootState } from '../store'
@@ -7,6 +13,17 @@ import {
   setOrderBookIsListening,
 } from '../store/orders/actions'
 import { Order, OrderBookPair, OrderBookState } from '../store/orders/reducers'
+
+type Channel = 'order_book_btceur' | 'order_book_btcusd'
+
+const parsePair = (channel: Channel): OrderBookPair => {
+  switch (channel) {
+    case 'order_book_btceur':
+      return 'btceur'
+    case 'order_book_btcusd':
+      return 'btcusd'
+  }
+}
 
 const parseOrders = (
   orders: [number, number][],
@@ -26,22 +43,66 @@ const parseOrders = (
     : []
 }
 
-const socketMessage = (shouldListen: boolean, orderBookType: OrderBookPair) => {
+interface SocketMessage {
+  channel: Channel
+  data?: {
+    asks: [number, number][]
+    bids: [number, number][]
+    microtimestamp: number
+  }
+  dispatch: Dispatch<any>
+  event: string
+}
+
+const parseSocketMessage = ({
+  channel,
+  data,
+  dispatch,
+  event,
+}: SocketMessage) => {
+  const pair = parsePair(channel)
+  if (event === 'data' && data) {
+    const bids: Order[] = parseOrders(data.bids, true).reverse()
+    const asks: Order[] = parseOrders(data.asks, false)
+    dispatch(
+      addOrderOrderBookSnapshot({
+        orderBookPair: pair,
+        snapshot: {
+          timestamp: Math.round(Number(data.microtimestamp) / 1000),
+          orders: {
+            asks,
+            bids,
+          },
+        },
+      })
+    )
+  } else if (event === 'bts:subscription_succeeded') {
+    dispatch(setOrderBookIsListening({ isListening: true }))
+  } else if (event === 'bts:unsubscription_succeeded') {
+    dispatch(setOrderBookIsListening({ isListening: false }))
+  }
+}
+
+const manageSubscription = ({
+  shouldListen,
+  pair,
+}: {
+  shouldListen: boolean
+  pair: OrderBookPair
+}) => {
   return JSON.stringify({
     event: `bts:${shouldListen ? 'subscribe' : 'unsubscribe'}`,
     data: {
-      channel: `order_book_${orderBookType}`,
+      channel: `order_book_${pair}`,
     },
   })
 }
 
 interface ApiContextProps {
-  changePair: (pair: OrderBookPair) => void
   setIsListening: (isListening: boolean) => void
 }
 
 export const ApiContext = createContext<ApiContextProps>({
-  changePair: () => {},
   setIsListening: () => {},
 })
 
@@ -55,63 +116,65 @@ const ApiContextProvider = ({
   orderBook,
 }: ApiContextProviderProps) => {
   const [currentlyListenedPair, setCurrentlyListenedPair] =
-    useState<OrderBookPair>('btceur')
+    useState<OrderBookPair | null>(null)
   const [isConnectionOpen, setIsConnectionOpen] = useState<boolean>(false)
   const [websocket, setWebsocket] = useState<WebSocket>()
-  const [lastMessageTime, setLastMessageTime] = useState<number>(0)
   const dispatch = useDispatch()
 
   useEffect(() => {
     const websocket = new WebSocket('wss://ws.bitstamp.net')
-    console.log('START', websocket)
     websocket.onopen = () => {
-      websocket.send(socketMessage(true, orderBook.chosenPair))
+      websocket.send(
+        manageSubscription({
+          shouldListen: true,
+          pair: orderBook.chosenPair,
+        })
+      )
       setIsConnectionOpen(true)
     }
     websocket.onclose = () => {
       setIsConnectionOpen(false)
     }
     websocket.onmessage = (e) => {
-      // a message was received
-      const message = JSON.parse(e.data)
-      const messageData = message.data
-      if (
-        messageData &&
-        Number(messageData.microtimestamp) - lastMessageTime > 2000
-      ) {
-        const bids: Order[] = parseOrders(messageData.bids, true).reverse()
-        const asks: Order[] = parseOrders(messageData.asks, false)
-        dispatch(
-          addOrderOrderBookSnapshot({
-            orderBookType: orderBook.chosenPair,
-            snapshot: {
-              timestamp: Math.round(Number(messageData.microtimestamp) / 1000),
-              orders: {
-                asks,
-                bids,
-              },
-            },
-          })
-        )
-        setLastMessageTime(Number(messageData.microtimestamp))
-      }
+      const { channel, data, event } = JSON.parse(e.data) as SocketMessage
+      parseSocketMessage({ channel, data, event, dispatch })
     }
     setWebsocket(websocket)
   }, [])
 
+  useEffect(() => {
+    if (websocket != null && websocket.readyState === 1 && isConnectionOpen) {
+      if (currentlyListenedPair != null) {
+        websocket.send(
+          manageSubscription({
+            shouldListen: false,
+            pair: currentlyListenedPair,
+          })
+        )
+      }
+      websocket.send(
+        manageSubscription({ shouldListen: true, pair: orderBook.chosenPair })
+      )
+    }
+    setCurrentlyListenedPair(orderBook.chosenPair)
+  }, [orderBook.chosenPair])
+
   const apiProvider: ApiContextProps = {
-    changePair: (pair: OrderBookPair) => {
-      if (websocket != null && websocket.readyState === 1 && isConnectionOpen) {
-        websocket.send(socketMessage(false, currentlyListenedPair))
-        websocket.send(socketMessage(true, pair))
-        setCurrentlyListenedPair(pair)
+    setIsListening: (shouldListen: boolean) => {
+      console.log(shouldListen)
+      if (
+        websocket != null &&
+        websocket.readyState === 1 &&
+        isConnectionOpen &&
+        currentlyListenedPair != null
+      ) {
+        websocket.send(
+          manageSubscription({
+            shouldListen,
+            pair: currentlyListenedPair,
+          })
+        )
       }
-    },
-    setIsListening: (isListening: boolean) => {
-      if (websocket != null && websocket.readyState === 1 && isConnectionOpen) {
-        websocket.send(socketMessage(isListening, orderBook.chosenPair))
-      }
-      dispatch(setOrderBookIsListening({ isListening }))
     },
   }
 
