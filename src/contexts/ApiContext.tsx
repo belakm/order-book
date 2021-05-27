@@ -102,6 +102,11 @@ interface ApiContextProps {
   setIsListening: (isListening: boolean) => void
 }
 
+/**
+ * Manages socket subscription and different types of socket messages.
+ * @param setIsListening - regulates whether current active channel should be
+ *    listened to or paused (subscibed / unsubscribed).
+ */
 export const ApiContext = createContext<ApiContextProps>({
   setIsListening: () => {},
 })

@@ -19,6 +19,10 @@ const pairOptions: { key: OrderBookPair; text: string }[] = [
   },
 ]
 
+/**
+ * A top bar component, also regulates which currency pair is shown
+ * in on the UI and being listened to via socket.
+ */
 const TopBar = () => {
   const dispatch = useDispatch()
   const changePair = (pair: OrderBookPair) =>

@@ -2,12 +2,17 @@ import React, { FunctionComponent } from 'react'
 import { Text, View } from 'react-native'
 
 import styles from '../../style'
+import { toReadablePriceNumber } from '../../utils/formatters'
 
 interface SnapshotPriceBarProps {
-  bidPrice: number | string
-  askPrice: number | string
+  bidPrice?: number
+  askPrice?: number
 }
 
+/**
+ * A simple UI element to show the last bid and ask price based on the
+ * selected orderbook snapshot in the store.
+ */
 const SnapshotPriceBar: FunctionComponent<SnapshotPriceBarProps> = ({
   bidPrice,
   askPrice,
@@ -25,25 +30,27 @@ const SnapshotPriceBar: FunctionComponent<SnapshotPriceBarProps> = ({
         <View style={[styles.flexRow]}>
           <Text style={styles.textLight}>B: </Text>
           <Text
+            testID="bid_price"
             style={[
               styles.priceBoxDetail,
               styles.priceBoxDetailBid,
               styles.materialPadding,
             ]}
           >
-            {bidPrice}
+            {toReadablePriceNumber(bidPrice)}
           </Text>
         </View>
         <View style={[styles.flexRow, { marginLeft: 12 }]}>
           <Text style={styles.textLight}>A: </Text>
           <Text
+            testID="ask_price"
             style={[
               styles.priceBoxDetail,
               styles.priceBoxDetailAsk,
               styles.materialPadding,
             ]}
           >
-            {askPrice}
+            {toReadablePriceNumber(askPrice)}
           </Text>
         </View>
       </View>

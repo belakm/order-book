@@ -11,6 +11,10 @@ interface SnapshotControlsProps {
   orderBook: OrderBookState
 }
 
+/**
+ * Can pause adding new orderbook snapshot entries into store
+ * as well as changing which one is displayed in the UI.
+ */
 const SnapshotControls = ({ orderBook }: SnapshotControlsProps) => {
   const dispatch = useDispatch()
   const apiContext = useContext(ApiContext)
@@ -26,6 +30,7 @@ const SnapshotControls = ({ orderBook }: SnapshotControlsProps) => {
     >
       <View style={[styles.snapshotControl]}>
         <Button
+          testID="previous_snapshot"
           color="white"
           disabled={
             orderBook.isListening ||
@@ -40,6 +45,7 @@ const SnapshotControls = ({ orderBook }: SnapshotControlsProps) => {
       </View>
       <View style={[styles.flexGrow, styles.marginHorizontal]}>
         <Button
+          testID="snapshot_pause"
           color="white"
           onPress={() => {
             if (!orderBook.isListening) {
@@ -52,6 +58,7 @@ const SnapshotControls = ({ orderBook }: SnapshotControlsProps) => {
       </View>
       <View style={[styles.snapshotControl]}>
         <Button
+          testID="next_snapshot"
           color="white"
           disabled={orderBook.isListening || orderBook.snapshotIndex === 0}
           onPress={() =>

@@ -31,7 +31,7 @@ export type OrderBookState = {
   }
 }
 
-const initialState: OrderBookState = {
+export const initialState: OrderBookState = {
   isListening: true,
   snapshotIndex: 0,
   chosenPair: 'btceur',
@@ -77,7 +77,12 @@ const orderBook: Reducer<OrderBookState, Action> = (
     case 'SNAPSHOT_INDEX':
       return {
         ...state,
-        snapshotIndex: action.index,
+        snapshotIndex:
+          action.index <= 0 || state.pairs[state.chosenPair].length === 0
+            ? 0
+            : action.index >= state.pairs[state.chosenPair].length
+            ? state.pairs[state.chosenPair].length - 1
+            : action.index,
       }
     // on init
     default:

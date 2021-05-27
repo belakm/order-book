@@ -14,18 +14,21 @@ interface SnapshotProps {
   orderBook: OrderBookState
 }
 
+/**
+ * A top component for display of an orderbook snapshot.
+ */
 const SnapshotViewer = ({ orderBook }: SnapshotProps) => {
   const currentSnapshot =
     orderBook.pairs[orderBook.chosenPair][orderBook.snapshotIndex]
-  let bidPrice = 'n/a'
-  let askPrice = 'n/a'
+  let bidPrice
+  let askPrice
   if (currentSnapshot) {
     const { orders } = currentSnapshot
     bidPrice =
       orders.bids.length > 0
-        ? orders.bids[orders.bids.length - 1].price.toFixed(2)
-        : 'n/a'
-    askPrice = orders.asks.length > 0 ? orders.asks[0].price.toFixed(2) : 'n/a'
+        ? orders.bids[orders.bids.length - 1].price
+        : undefined
+    askPrice = orders.asks.length > 0 ? orders.asks[0].price : undefined
   }
   return currentSnapshot ? (
     <View style={[styles.bodyBackground, styles.flexColumn]}>
