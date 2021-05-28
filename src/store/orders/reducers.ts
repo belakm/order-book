@@ -1,6 +1,7 @@
 import { Reducer } from 'redux'
 
 import { Action } from './actions'
+import { parseOrders } from './helpers'
 
 export const snapshotLimit = 100
 
@@ -18,6 +19,16 @@ export interface Orders {
 export interface OrderBookSnapshot {
   timestamp: number
   orders: Orders
+}
+
+export interface RawOrders {
+  asks: [number, number][]
+  bids: [number, number][]
+}
+
+export interface RawOrderBookSnapshot {
+  timestamp: number
+  orders: RawOrders
 }
 
 export type OrderBookPair = 'btcusd' | 'btceur'
@@ -54,15 +65,26 @@ const orderBook: Reducer<OrderBookState, Action> = (
           : 0
       if (!state.isListening || action.snapshot.timestamp - lastTimestamp < 500)
         return state
-      return {
-        ...state,
-        pairs: {
-          ...state.pairs,
-          [action.orderBookPair]: [
-            action.snapshot,
-            ...state.pairs[action.orderBookPair],
-          ].slice(0, snapshotLimit - 2),
-        },
+      else {
+        return {
+          ...state,
+          pairs: {
+            ...state.pairs,
+            [action.orderBookPair]: [
+              {
+                ...action.snapshot,
+                orders: {
+                  asks: parseOrders(action.snapshot.orders.asks, false),
+                  bids: parseOrders(
+                    action.snapshot.orders.bids,
+                    true
+                  ).reverse(),
+                },
+              },
+              ...state.pairs[action.orderBookPair],
+            ].slice(0, snapshotLimit - 2),
+          },
+        }
       }
     case 'ORDER_BOOK_IS_LISTENING':
       return {

@@ -22,24 +22,6 @@ const parsePair = (channel: Channel): OrderBookPair => {
   }
 }
 
-const parseOrders = (
-  orders: [number, number][],
-  ordersAreBids: boolean
-): Order[] => {
-  let sum = 0
-  return orders.length > 0
-    ? orders
-        .sort(([priceA], [priceB]) =>
-          ordersAreBids ? priceB - priceA : priceA - priceB
-        )
-        .map(([price, volume]) => ({
-          volume: Number(volume),
-          price: Number(price),
-          sum: (sum += Number(volume)),
-        }))
-    : []
-}
-
 interface SocketMessage {
   channel: Channel
   data?: {
@@ -59,16 +41,14 @@ const parseSocketMessage = ({
 }: SocketMessage) => {
   const pair = parsePair(channel)
   if (event === 'data' && data) {
-    const bids: Order[] = parseOrders(data.bids, true).reverse()
-    const asks: Order[] = parseOrders(data.asks, false)
     dispatch(
       addOrderOrderBookSnapshot({
         orderBookPair: pair,
         snapshot: {
           timestamp: Math.round(Number(data.microtimestamp) / 1000),
           orders: {
-            asks,
-            bids,
+            asks: data.asks,
+            bids: data.bids,
           },
         },
       })

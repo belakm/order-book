@@ -16,8 +16,14 @@ describe('orders reducer', () => {
         snapshot: {
           timestamp,
           orders: {
-            bids: [{ price: 1, volume: 1, sum: 1 }],
-            asks: [{ price: 1, volume: 1, sum: 1 }],
+            bids: [
+              [1, 1],
+              [2, 3],
+            ],
+            asks: [
+              [1, 1],
+              [2, 5],
+            ],
           },
         },
       })
@@ -28,8 +34,14 @@ describe('orders reducer', () => {
           {
             timestamp,
             orders: {
-              bids: [{ price: 1, volume: 1, sum: 1 }],
-              asks: [{ price: 1, volume: 1, sum: 1 }],
+              bids: [
+                { price: 1, volume: 1, sum: 4 },
+                { price: 2, volume: 3, sum: 3 },
+              ],
+              asks: [
+                { price: 1, volume: 1, sum: 1 },
+                { price: 2, volume: 5, sum: 6 },
+              ],
             },
           },
         ],

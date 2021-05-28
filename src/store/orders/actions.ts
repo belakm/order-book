@@ -1,10 +1,10 @@
-import { OrderBookSnapshot, OrderBookPair } from './reducers'
+import { OrderBookPair, RawOrderBookSnapshot } from './reducers'
 
 // Action Definition
 export interface AddOrderOrderBookSnapshot {
   type: 'ORDER_BOOK_SNAPSHOT'
   orderBookPair: OrderBookPair
-  snapshot: OrderBookSnapshot
+  snapshot: RawOrderBookSnapshot
 }
 export interface SetOrderBookListening {
   type: 'ORDER_BOOK_IS_LISTENING'
@@ -32,7 +32,7 @@ export const addOrderOrderBookSnapshot = ({
   snapshot,
 }: {
   orderBookPair: OrderBookPair
-  snapshot: OrderBookSnapshot
+  snapshot: RawOrderBookSnapshot
 }): AddOrderOrderBookSnapshot => ({
   type: 'ORDER_BOOK_SNAPSHOT',
   orderBookPair,
