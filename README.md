@@ -17,6 +17,7 @@ A step by step guide that will tell you how to get the development environment u
 
 ```
 $ git clone git@github.com:belakm/order-book.git
+$ cd order-book
 $ yarn
 $ expo start
 ```
