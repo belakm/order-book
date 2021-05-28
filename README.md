@@ -28,3 +28,8 @@ Run tests via standard command
 ```
 $ yarn test
 ```
+
+## Screenshots
+
+![IMG_7912](https://user-images.githubusercontent.com/13392444/119969117-74d0fc80-bfae-11eb-912f-3d842cb44b2a.png)
+![IMG_7913](https://user-images.githubusercontent.com/13392444/119969125-76022980-bfae-11eb-8907-10dc19f81713.png)
