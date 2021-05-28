@@ -9,7 +9,7 @@ import { connect, useDispatch } from 'react-redux'
 
 import { RootState } from '../store'
 import { addOrderOrderBookSnapshot } from '../store/orders/actions'
-import { Order, OrderBookPair, OrderBookState } from '../store/orders/reducers'
+import { OrderBookPair, OrderBookState } from '../store/orders/reducers'
 
 type Channel = 'order_book_btceur' | 'order_book_btcusd'
 
