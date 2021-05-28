@@ -51,6 +51,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   priceBoxDetail: {
+    paddingHorizontal: 4,
+    paddingVertical: 6,
     fontWeight: 'bold',
     borderRadius: 4,
     borderWidth: 1,

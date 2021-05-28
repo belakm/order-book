@@ -127,25 +127,28 @@ const ApiContextProvider = ({
   const dispatch = useDispatch()
 
   useEffect(() => {
-    const websocket = new WebSocket('wss://ws.bitstamp.net')
-    websocket.onopen = () => {
-      websocket.send(
-        manageSubscription({
-          shouldListen: true,
-          pair: orderBook.chosenPair,
-        })
-      )
-      setIsConnectionOpen(true)
+    if (!isConnectionOpen) {
+      const websocket = new WebSocket('wss://ws.bitstamp.net')
+      websocket.onopen = () => {
+        websocket.send(
+          manageSubscription({
+            shouldListen: true,
+            pair: orderBook.chosenPair,
+          })
+        )
+        setIsConnectionOpen(true)
+      }
+      websocket.onclose = () => {
+        setIsConnectionOpen(false)
+      }
+      websocket.onmessage = (e) => {
+        const { channel, data, event } = JSON.parse(e.data) as SocketMessage
+        parseSocketMessage({ channel, data, event, dispatch })
+      }
+      setWebsocket(websocket)
     }
-    websocket.onclose = () => {
-      setIsConnectionOpen(false)
-    }
-    websocket.onmessage = (e) => {
-      const { channel, data, event } = JSON.parse(e.data) as SocketMessage
-      parseSocketMessage({ channel, data, event, dispatch })
-    }
-    setWebsocket(websocket)
-  }, [])
+    // rstart connection if socket drops
+  }, [isConnectionOpen])
 
   useEffect(() => {
     if (websocket != null && websocket.readyState === 1 && isConnectionOpen) {

@@ -9,6 +9,7 @@ import {
   Order,
 } from '../../store/orders/reducers'
 import styles, { colors } from '../../style'
+import { toReadablePriceNumber } from '../../utils/formatters'
 import PriceLine from './Priceline'
 
 interface ChartProps {
@@ -109,9 +110,9 @@ const Chart: FunctionComponent<ChartProps> = ({
         }}
         xAccessor={({ item }) => item.price}
         scale={scale.scaleLinear}
-        numberOfTicks={isPortraitMode ? 2 : 4}
+        numberOfTicks={isPortraitMode ? 1 : 3}
         contentInset={{ left: 80, right: 10 }}
-        formatLabel={(value) => `${value} ${currency}`}
+        formatLabel={(value) => `${toReadablePriceNumber(value)} ${currency}`}
       />
     </View>
   )

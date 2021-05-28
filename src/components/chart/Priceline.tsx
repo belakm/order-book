@@ -2,6 +2,7 @@ import React from 'react'
 import { G, Line, Rect, Text } from 'react-native-svg'
 
 import { colors } from '../../style'
+import { toReadablePriceNumber } from '../../utils/formatters'
 
 interface PriceLineProps {
   x?: Function
@@ -46,7 +47,7 @@ const PriceLine = ({
       textAnchor="middle"
       fill="white"
     >
-      {`${price.toFixed(2)} ${currency}`}
+      {`${toReadablePriceNumber(price)} ${currency}`}
     </Text>
   </G>
 )

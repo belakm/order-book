@@ -31,11 +31,7 @@ const SnapshotPriceBar: FunctionComponent<SnapshotPriceBarProps> = ({
           <Text style={styles.textLight}>B: </Text>
           <Text
             testID="bid_price"
-            style={[
-              styles.priceBoxDetail,
-              styles.priceBoxDetailBid,
-              styles.materialPadding,
-            ]}
+            style={[styles.priceBoxDetail, styles.priceBoxDetailBid]}
           >
             {toReadablePriceNumber(bidPrice)}
           </Text>
@@ -44,11 +40,7 @@ const SnapshotPriceBar: FunctionComponent<SnapshotPriceBarProps> = ({
           <Text style={styles.textLight}>A: </Text>
           <Text
             testID="ask_price"
-            style={[
-              styles.priceBoxDetail,
-              styles.priceBoxDetailAsk,
-              styles.materialPadding,
-            ]}
+            style={[styles.priceBoxDetail, styles.priceBoxDetailAsk]}
           >
             {toReadablePriceNumber(askPrice)}
           </Text>
