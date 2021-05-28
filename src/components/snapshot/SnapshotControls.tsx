@@ -3,7 +3,10 @@ import { Button, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 
 import { ApiContext } from '../../contexts/ApiContext'
-import { setSnapshotIndex } from '../../store/orders/actions'
+import {
+  setOrderBookIsListening,
+  setSnapshotIndex,
+} from '../../store/orders/actions'
 import { OrderBookState } from '../../store/orders/reducers'
 import styles from '../../style'
 
@@ -52,6 +55,9 @@ const SnapshotControls = ({ orderBook }: SnapshotControlsProps) => {
               dispatch(setSnapshotIndex({ index: 0 }))
             }
             apiContext.setIsListening(!orderBook.isListening)
+            dispatch(
+              setOrderBookIsListening({ isListening: !orderBook.isListening })
+            )
           }}
           title={orderBook.isListening ? 'Pause' : 'Unpause'}
         />

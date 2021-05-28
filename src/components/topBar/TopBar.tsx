@@ -25,8 +25,9 @@ const pairOptions: { key: OrderBookPair; text: string }[] = [
  */
 const TopBar = () => {
   const dispatch = useDispatch()
-  const changePair = (pair: OrderBookPair) =>
+  const changePair = (pair: OrderBookPair) => {
     dispatch(setChosenPair({ orderBookPair: pair }))
+  }
   return (
     <View
       style={[

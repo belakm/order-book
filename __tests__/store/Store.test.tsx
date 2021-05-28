@@ -88,6 +88,38 @@ describe('orders reducer', () => {
     })
   })
 
+  it('Should restart listening if the selected orderbook has no snapshots and is currently not listening.', () => {
+    expect(
+      reducer(
+        { ...initialState, isListening: false },
+        {
+          type: 'CHOSEN_ORDER_BOOK',
+          orderBookPair: 'btcusd',
+        }
+      )
+    ).toEqual({
+      ...initialState,
+      isListening: true,
+      chosenPair: 'btcusd',
+    })
+  })
+
+  it('Should reset snapshot index to 0 on changing of chosen currency pair.', () => {
+    expect(
+      reducer(
+        { ...initialState, snapshotIndex: 5 },
+        {
+          type: 'CHOSEN_ORDER_BOOK',
+          orderBookPair: 'btcusd',
+        }
+      )
+    ).toEqual({
+      ...initialState,
+      snapshotIndex: 0,
+      chosenPair: 'btcusd',
+    })
+  })
+
   it('Should track snapshot index and keep it in bounds of 0 and the number of snapshots kept.', () => {
     expect(
       reducer(initialState, {

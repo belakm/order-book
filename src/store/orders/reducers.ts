@@ -72,6 +72,11 @@ const orderBook: Reducer<OrderBookState, Action> = (
     case 'CHOSEN_ORDER_BOOK':
       return {
         ...state,
+        isListening:
+          state.pairs[action.orderBookPair].length === 0
+            ? true
+            : state.isListening,
+        snapshotIndex: 0,
         chosenPair: action.orderBookPair,
       }
     case 'SNAPSHOT_INDEX':

@@ -8,10 +8,7 @@ import React, {
 import { connect, useDispatch } from 'react-redux'
 
 import { RootState } from '../store'
-import {
-  addOrderOrderBookSnapshot,
-  setOrderBookIsListening,
-} from '../store/orders/actions'
+import { addOrderOrderBookSnapshot } from '../store/orders/actions'
 import { Order, OrderBookPair, OrderBookState } from '../store/orders/reducers'
 
 type Channel = 'order_book_btceur' | 'order_book_btcusd'
@@ -76,10 +73,6 @@ const parseSocketMessage = ({
         },
       })
     )
-  } else if (event === 'bts:subscription_succeeded') {
-    dispatch(setOrderBookIsListening({ isListening: true }))
-  } else if (event === 'bts:unsubscription_succeeded') {
-    dispatch(setOrderBookIsListening({ isListening: false }))
   }
 }
 

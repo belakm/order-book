@@ -58,9 +58,12 @@ const Chart: FunctionComponent<ChartProps> = ({
     : [styles.chartLandscape]
 
   useEffect(() => {
+    const isMounted = true
     Dimensions.addEventListener('change', () => {
       const { width } = Dimensions.get('window')
-      setIsPortraitMode(width < 500)
+      if (isMounted) {
+        setIsPortraitMode(width < 500)
+      }
     })
   }, [])
 
